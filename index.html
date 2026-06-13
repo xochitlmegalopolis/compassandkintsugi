@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dummy Backup Site</title>
+
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --paper: #fffefb;
+      --text: #25231f;
+      --muted: #777064;
+      --line: #e5dfd3;
+      --accent: #6b4f2a;
+      --sidebar-width: 220px;
+      --toc-width: 220px;
+      --content-width: 680px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Top Substack-ish bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 58px;
+      background: rgba(250, 249, 245, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      transition: transform 0.25s ease;
+    }
+
+    .topbar.hidden {
+      transform: translateY(-100%);
+    }
+
+    .topbar-inner {
+      max-width: 1240px;
+      height: 100%;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: system-ui, sans-serif;
+      font-size: 15px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      color: var(--accent);
+    }
+
+    .topbar-title {
+      font-family: system-ui, sans-serif;
+      font-size: 14px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Main three-column layout */
+    .layout {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 44px 24px 80px;
+      display: grid;
+      grid-template-columns: var(--sidebar-width) minmax(0, var(--content-width)) var(--toc-width);
+      gap: 56px;
+      align-items: start;
+    }
+
+    .sidebar,
+    .toc {
+      position: sticky;
+      top: 90px;
+      align-self: start;
+      font-family: system-ui, sans-serif;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .sidebar-section,
+    .toc-section {
+      border-left: 1px solid var(--line);
+      padding-left: 16px;
+      margin-bottom: 28px;
+    }
+
+    .sidebar h2,
+    .toc h2 {
+      margin: 0 0 10px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .sidebar ul,
+    .toc ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .sidebar li,
+    .toc li {
+      margin: 7px 0;
+    }
+
+    .toc a {
+      color: var(--muted);
+    }
+
+    .toc a:hover {
+      color: var(--accent);
+    }
+
+    .toc .toc-h3 {
+      padding-left: 14px;
+      font-size: 13px;
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    article {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 48px 54px;
+      box-shadow: 0 20px 60px rgba(60, 45, 20, 0.05);
+    }
+
+    .kicker {
+      font-family: system-ui, sans-serif;
+      color: var(--muted);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 14px;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.15;
+      font-weight: 500;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      margin: 0 0 24px;
+      letter-spacing: -0.04em;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      margin-top: 2.6em;
+      margin-bottom: 0.6em;
+      padding-top: 0.2em;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      margin-top: 2em;
+      margin-bottom: 0.4em;
+    }
+
+    p {
+      margin: 1.1em 0;
+    }
+
+    .lede {
+      font-size: 1.25rem;
+      line-height: 1.55;
+      color: #3f3a32;
+    }
+
+    blockquote {
+      margin: 2em 0;
+      padding: 0.2em 0 0.2em 1.2em;
+      border-left: 3px solid var(--accent);
+      color: #514a40;
+      font-style: italic;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.9em;
+      background: #f1ede4;
+      padding: 0.12em 0.32em;
+      border-radius: 4px;
+    }
+
+    .note-card {
+      margin: 2em 0;
+      padding: 1.2em 1.4em;
+      border: 1px solid var(--line);
+      background: #fbf7ec;
+      border-radius: 14px;
+    }
+
+    .note-card strong {
+      color: var(--accent);
+    }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      font-family: system-ui, sans-serif;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* Mobile */
+    @media (max-width: 1000px) {
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 24px 16px 60px;
+      }
+
+      .sidebar,
+      .toc {
+        position: static;
+      }
+
+      .sidebar {
+        display: block;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        padding: 16px;
+      }
+
+      .sidebar-section {
+        border-left: 0;
+        padding-left: 0;
+        margin-bottom: 0;
+      }
+
+      .sidebar ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+      }
+
+      .sidebar li {
+        margin: 0;
+      }
+
+      .toc {
+        display: none;
+      }
+
+      article {
+        padding: 32px 22px;
+      }
+
+      .topbar-inner {
+        padding: 0 16px;
+      }
+
+      .topbar-title {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar" id="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#">
+        <span class="logo">✦</span>
+        <span>Dummy Site</span>
+      </a>
+      <div class="topbar-title">A quiet backup layout for notes, pages, and essays</div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h2>Index</h2>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Notes</a></li>
+          <li><a href="#">Recipes</a></li>
+          <li><a href="#">Language</a></li>
+          <li><a href="#">Music</a></li>
+          <li><a href="#">Nature</a></li>
+          <li><a href="#">About</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main>
+      <article>
+        <div class="kicker">Backup test page</div>
+
+        <h1>Wide margins, narrow reading space, sidebars.</h1>
+
+        <p class="lede">
+          This is a simple static GitHub Pages layout. It does not need Markdown,
+          npm, a build process, or a framework. It is just one HTML file.
+        </p>
+
+        <p>
+          The central column is intentionally narrower than the page. The left side
+          holds a site index, while the right side automatically collects the page
+          headings into a table of contents.
+        </p>
+
+        <div class="note-card">
+          <strong>How to test:</strong> make a new GitHub repository, upload this file
+          as <code>index.html</code>, then enable GitHub Pages from the repository settings.
+        </div>
+
+        <h2 id="first-section">First section</h2>
+
+        <p>
+          This layout is meant to imitate the feeling of Flowershow, documentation
+          sites, and Substack-like reading pages: lots of air, a stable reading
+          column, and simple navigation.
+        </p>
+
+        <p>
+          The header sticks at the top. When you scroll down, it hides. When you
+          scroll back up, it reappears. This is optional, but it gives the page a
+          more modern feel.
+        </p>
+
+        <h2 id="second-section">Second section</h2>
+
+        <p>
+          On desktop, the page uses three columns. On mobile, the sidebars collapse:
+          the left index appears above the article, and the right heading index is
+          hidden because there is not enough horizontal space.
+        </p>
+
+        <h3 id="small-subsection">Small subsection</h3>
+
+        <p>
+          Subsections like this appear slightly indented in the right-side contents
+          list. You can use <code>h2</code> and <code>h3</code> headings normally.
+        </p>
+
+        <blockquote>
+          The important thing is that the site is boring in its machinery and elegant
+          in its spacing.
+        </blockquote>
+
+        <h2 id="third-section">Third section</h2>
+
+        <p>
+          To make more pages, copy this file, rename it, and change the links in the
+          left sidebar. For example, you could make <code>notes.html</code>,
+          <code>recipes.html</code>, and <code>about.html</code>.
+        </p>
+
+        <p>
+          Later, you can split the CSS into a separate <code>style.css</code> file.
+          But for a first dummy test, one file is easier.
+        </p>
+
+        <footer>
+          Last updated: replace this with your own date or leave it out.
+        </footer>
+      </article>
+    </main>
+
+    <aside class="toc">
+      <div class="toc-section">
+        <h2>On this page</h2>
+        <ul id="toc-list">
+          <!-- Filled automatically by JavaScript -->
+        </ul>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    // Auto-build right-side table of contents from h2 and h3 headings.
+    const tocList = document.getElementById("toc-list");
+    const headings = document.querySelectorAll("article h2, article h3");
+
+    headings.forEach((heading) => {
+      if (!heading.id) {
+        heading.id = heading.textContent
+          .toLowerCase()
+          .trim()
+          .replace(/[^\w\s-]/g, "")
+          .replace(/\s+/g, "-");
+      }
+
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+
+      a.href = "#" + heading.id;
+      a.textContent = heading.textContent;
+
+      if (heading.tagName.toLowerCase() === "h3") {
+        li.classList.add("toc-h3");
+      }
+
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+
+    // Hide topbar on scroll down, show on scroll up.
+    const topbar = document.getElementById("topbar");
+    let lastScrollY = window.scrollY;
+
+    window.addEventListener("scroll", () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        topbar.classList.add("hidden");
+      } else {
+        topbar.classList.remove("hidden");
+      }
+
+      lastScrollY = currentScrollY;
+    });
+  </script>
+</body>
+</html>
